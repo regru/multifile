@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fyneworks/multifile"
+    "url": "https://github.com/regru/multifile.git"
   },
   "keywords": [
     "jquery",
@@ -25,16 +25,15 @@
   },
   "homepage": "https://github.com/fyneworks/multifile",
   "dependencies": {
-    "jQuery": "~1.7.3"
+    "jquery": "~1.7.3"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
-    "grunt-sass": "~0.12.1",
+    "grunt-sass": "1.1.0",
     "grunt-contrib-watch": "~0.6.1",
-    "node-sass": "^0.8.4",
+    "node-sass": "3.4.2",
     "uglifyjs": "^2.3.6",
     "grunt-contrib-uglify": "^0.4.0",
-    "selenium-webdriver": "^2.41.0",
     "grunt-contrib-cssmin": "^0.9.0",
     "clean-css": "^2.1.8",
     "html-minifier": "^0.5.6",

@@ -1,12 +1,7 @@
 #[jQuery Multiple File Upload](http://www.fyneworks.com/jquery/multifile/)
 
-##Overview
 
-#[Original](https://github.com/fyneworks/multifile#readme)
-
-##Additions
-
-###Options
+##Options
 
 Custum DOM elements naming
 ```js
@@ -18,5 +13,6 @@ Put button in wrap with input
 buttonInWrap: '' // .className
 ```
 
-_multiple_ attribute fix (does not appeared on input change)
+##Fixes
+__multiple__ attribute fix (disappear on input original change)
 

@@ -48,7 +48,7 @@ if (window.jQuery)(function ($) {
         }
 
         // Initialize options for this call
-        var options = $.extend({} /* new object */ ,
+        options = $.extend({} /* new object */ ,
             $.fn.MultiFile.options /* default options */ ,
             options || {} /* just-in-time options */
         );
@@ -57,9 +57,9 @@ if (window.jQuery)(function ($) {
         // this code will automatically intercept native form submissions
         // and disable empty file elements
         $('form')
-            .not('MultiFile-intercepted')
-            .addClass(options.multifileName + '-intercepted')
-            .submit($.fn.MultiFile.disableEmpty);
+            .not(options.multifileName + '_intercepted')
+            .addClass(options.multifileName + '_intercepted')
+            .submit($.fn.MultiFile.disableEmpty(options.multifileName + '_applied'));
 
         //### http://plugins.jquery.com/node/1363
         // utility method to integrate this plugin with others...
@@ -144,7 +144,7 @@ if (window.jQuery)(function ($) {
 
                 // APPLY CONFIGURATION
                 $.extend(MultiFile, o || {});
-                MultiFile.STRING = $.extend(MultiFile.STRING || {}, $.fn.MultiFile.options.STRING, MultiFile.STRING);
+                MultiFile.STRING = $.extend({}, $.fn.MultiFile.options.STRING, options.STRING);
 
                 //===
 
@@ -154,7 +154,7 @@ if (window.jQuery)(function ($) {
                     n: 0, // How many elements are currently selected?
                     slaves: [],
                     files: [],
-                    instanceKey: MultiFile.e.id || options.multifileName + String(group_count), // Instance Key?
+                    instanceKey: String(group_count), // Instance Key?
                     generateID: function (z) {
                         return MultiFile.instanceKey + (z > 0 ? '_F' + String(z) : '');
                     },
@@ -184,15 +184,17 @@ if (window.jQuery)(function ($) {
                 //===
 
                 // Create wrapper to hold our file list
-                MultiFile.wrapID = MultiFile.instanceKey + '-wrap'; // Wrapper ID?
+                MultiFile.wrapID = options.multifileName + '__wrap-' + MultiFile.instanceKey; // Wrapper ID?
 
-                if ( options.buttonInWrap ) {
-                    MultiFile.E.next(options.buttonInWrap).andSelf().wrapAll('<div class="' + options.multifileName + '-wrap" id="'+MultiFile.wrapID+'"></div>');
+                if ( options.wrapper ) {
+                    MultiFile.E.closest(options.wrapper).attr('id', MultiFile.wrapID);
                 } else {
-                    MultiFile.E.wrap('<div class="' + options.multifileName + '-wrap" id="'+MultiFile.wrapID+'"></div>');
+                    MultiFile.E.wrap('<div class="' + options.multifileName + '__wrap" id="'+MultiFile.wrapID+'"></div>');
                 }
 
                 MultiFile.wrapper = $('#' + MultiFile.wrapID + '');
+
+                MultiFile.block = MultiFile.wrapper.closest('.' + options.multifileName);
 
                 //===
 
@@ -205,7 +207,7 @@ if (window.jQuery)(function ($) {
                     // Create a wrapper for the list
                     // * OPERA BUG: NO_MODIFICATION_ALLOWED_ERR ('list' is a read-only property)
                     // this change allows us to keep the files in the order they were selected
-                    $('<div class="'+options.multifileName+'-list" id="' + MultiFile.wrapID + '-list"></div>').insertBefore(MultiFile.wrapper);
+                    $('<div class="'+options.multifileName+'__list" id="' + options.multifileName + '__list-' + MultiFile.instanceKey + '"></div>').insertBefore(MultiFile.wrapper);
                     MultiFile.list = $('#' + MultiFile.wrapID + '-list');
                 }
                 MultiFile.list = $(MultiFile.list);
@@ -264,7 +266,7 @@ if (window.jQuery)(function ($) {
                     slave.val('').attr('value', '')[0].value = '';
 
                     // Stop plugin initializing on slaves
-                    slave.addClass(options.multifileName + '-applied');
+                    slave.addClass(options.multifileName + '_applied');
 
                     // Triggered when a file is selected
                     slave.change(function (a, b, c) {
@@ -399,9 +401,10 @@ if (window.jQuery)(function ($) {
                         // Handle error
                         if (ERROR.length > 0) {
 
+
                             // Handle error
                             if($.type(MultiFile.error)=='function')
-                                MultiFile.error(ERROR.join('\n\n'));
+                                MultiFile.error(ERROR.join('\n\n'), MultiFile);
 
                             // 2007-06-24: BUG FIX - Thanks to Adrian Wróbel <adrian [dot] wrobel [at] gmail.com>
                             // Ditch the trouble maker and add a fresh new element
@@ -453,14 +456,12 @@ if (window.jQuery)(function ($) {
 
                     }); // slave.change()
 
-                    //store custom class
-                    $(slave).data('multifileName', options.multifileName);
-
                     // point to wrapper
-                    $(slave).data(options.multifileName + '-wrap', MultiFile.wrapper);
+                    $(slave).data('wrapper', MultiFile.wrapper);
 
                     // store contorl's settings and file info in wrapper
                     $(MultiFile.wrapper).data('MultiFile',MultiFile);
+
 
                     // disable?
                     if(disable_slave) $(slave).attr('disabled','disabled').prop('disabled',true);
@@ -484,11 +485,11 @@ if (window.jQuery)(function ($) {
                                 S = MultiFile.STRING,
                                 n = S.label || S.file || S.name,
                                 t = S.title || S.tooltip || S.selected,
-                                p = '<img class="'+options.multifileName+'-preview" style="'+ MultiFile.previewCss+'"/>',
+                                p = '<img class="'+options.multifileName+'__preview" style="'+ MultiFile.previewCss+'"/>',
                                 label = $(
                                         (
-                                            '<span class="'+options.multifileName+'-label" title="' + t + '">'+
-                                                '<span class="'+options.multifileName+'-title">'+ n +'</span>'+
+                                            '<span class="'+options.multifileName+'__list-label" title="' + t + '">'+
+                                                '<span class="'+options.multifileName+'__list-title">'+ n +'</span>'+
                                                 (MultiFile.preview || $(slave).is('.with-preview') ? p : '' )+
                                             '</span>'
                                         )
@@ -500,7 +501,7 @@ if (window.jQuery)(function ($) {
 
                         // now supports preview via locale string.
                         // just add an <img class='MultiFile-preview'/> anywhere within the "file" string
-                        label.find('img.'+options.multifileName+'-preview').each(function(){
+                        label.find('img.'+options.multifileName+'__preview').each(function(){
                             var t = this;
                             var oFReader = new FileReader();
                             oFReader.readAsDataURL(file);
@@ -518,8 +519,8 @@ if (window.jQuery)(function ($) {
                     //$.each(files, function (i, file) {
                         // Create label elements
                         var
-                            r = $('<div class="'+options.multifileName+'-label"></div>'),
-                            b = $('<a class="'+options.multifileName+'-remove" href="#' + MultiFile.wrapID + '">' + MultiFile.STRING.remove + '</a>')
+                            r = $('<div class="' + options.multifileName + '__list-item"></div>'),
+                            b = $('<a class="' + options.multifileName + '__remove" href="#' + MultiFile.wrapID + '">' + MultiFile.STRING.remove + '</a>')
 
                                 // ********
                                 // TODO:
@@ -634,8 +635,6 @@ if (window.jQuery)(function ($) {
     ### Core functionality and API ###
     */
     $.extend($.fn.MultiFile, {
-
-
         /**
          * This method exposes the all the control's data
          *
@@ -651,14 +650,11 @@ if (window.jQuery)(function ($) {
          */
         data: function () {
 
-
             // analyse this element
-            var e = $(this), b = e.is('.' + this.data('multifileName') + '-wrap');
+            var e = $(this), b = e.is('#' + e.data('wrapper').attr('id'));
 
             // get control wrapper
-            var wp = b ? e : e.data(this.data('multifileName') + '-wrap');
-
-            console.log('$.extend', wp);
+            var wp = b ? e : e.data('wrapper');
             if(!wp || !wp.length)
                 return !console.error('Could not find MultiFile control wrapper');
 
@@ -766,7 +762,7 @@ if (window.jQuery)(function ($) {
             klass = (typeof (klass) == 'string' ? klass : '') || 'mfD';
             var o = [];
             $('input:file.MultiFile').each(function () {
-                if ($(this).val() == '') o[o.length] = this;
+                if ($(this).val() === '') o[o.length] = this;
             });
 
             // automatically re-enable for novice users
@@ -873,9 +869,7 @@ if (window.jQuery)(function ($) {
         preview: false,
         previewCss: 'max-height:100px; max-width:100px;',
         multifileName: 'MultiFile',     // make own name for all
-
-        // put button NEXT TO input in wrap with input
-        buttonInWrap: '',
+        wrapper: '', // .className point wrapper of the input
 
         // STRING: collection lets you show messages in different languages
         STRING: {
@@ -897,7 +891,7 @@ if (window.jQuery)(function ($) {
         autoIntercept: ['submit', 'ajaxSubmit', 'ajaxForm', 'validate', 'valid' /* array of methods to intercept */ ],
 
         // error handling function
-        error: function (s) {
+        error: function (s, multifile) {
 
             if(typeof console != 'undefined') console.log(s);
 

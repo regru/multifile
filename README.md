@@ -3,7 +3,7 @@
 
 ##Options
 
-Custum DOM elements naming
+Custom DOM elements naming
 ```js
 multifileName: 'MultiFile'
 ```

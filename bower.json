@@ -1,9 +1,9 @@
 {
   "name": "jquery.multifile",
-  "version": "2.2.2",
-  "homepage": "https://github.com/regru/multifile",
+  "version": "2.2.0",
+  "homepage": "https://github.com/fyneworks/multifile",
   "authors": [
-    "REG.RU"
+    "Fyneworks"
   ],
   "description": "jQuery multiple file upload plugin",
   "main": "jquery.MultiFile.js",

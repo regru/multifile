@@ -1,5 +1,5 @@
 /*
- ### jQuery Multiple File Selection Plugin v2.2.0 - 2015-03-23 ###
+ ### jQuery Multiple File Selection Plugin v2.2.3 - 2015-11-23 ###
  * Home: http://www.fyneworks.com/jquery/multifile/
  * Code: http://code.google.com/p/jquery-multifile-plugin/
  *
@@ -57,9 +57,8 @@ if (window.jQuery)(function ($) {
         // this code will automatically intercept native form submissions
         // and disable empty file elements
         $('form')
-            .not(options.multifileName + '_intercepted')
-            .addClass(options.multifileName + '_intercepted')
-            .submit($.fn.MultiFile.disableEmpty(options.multifileName + '_applied'));
+            .not('.' + options.multifileName + '_intercepted')
+            .addClass(options.multifileName + '_intercepted');
 
         //### http://plugins.jquery.com/node/1363
         // utility method to integrate this plugin with others...
@@ -68,9 +67,8 @@ if (window.jQuery)(function ($) {
             $.fn.MultiFile.options.autoIntercept = null; /* only run this once */
         }
         // loop through each matched element
-        this
-            .not('.' + options.multifileName)
-            .addClass(options.multifileName)
+        this.not('.' + options.multifileName + '_applied')
+            .addClass(options.multifileName + '_applied')
             .each(function () {
                 //#####################################################################
                 // MAIN PLUGIN FUNCTIONALITY - START
@@ -144,7 +142,7 @@ if (window.jQuery)(function ($) {
 
                 // APPLY CONFIGURATION
                 $.extend(MultiFile, o || {});
-                MultiFile.STRING = $.extend({}, $.fn.MultiFile.options.STRING, options.STRING);
+                MultiFile.STRING = $.extend({}, $.fn.MultiFile.options.STRING[options.lang], options.STRING[options.lang]);
 
                 //===
 
@@ -156,7 +154,7 @@ if (window.jQuery)(function ($) {
                     files: [],
                     instanceKey: String(group_count), // Instance Key?
                     generateID: function (z) {
-                        return MultiFile.instanceKey + (z > 0 ? '_F' + String(z) : '');
+                        return options.multifileName + '-' + MultiFile.instanceKey + (z > 0 ? '_F' + String(z) : '');
                     },
                     trigger: function (event, element, MultiFile, files) {
                         var rv, handler = MultiFile[event] || MultiFile['on'+event] ;
@@ -194,8 +192,6 @@ if (window.jQuery)(function ($) {
 
                 MultiFile.wrapper = $('#' + MultiFile.wrapID + '');
 
-                MultiFile.block = MultiFile.wrapper.closest('.' + options.multifileName);
-
                 //===
 
                 // MultiFile MUST have a name - default: file1[], file2[], file3[]
@@ -208,9 +204,16 @@ if (window.jQuery)(function ($) {
                     // * OPERA BUG: NO_MODIFICATION_ALLOWED_ERR ('list' is a read-only property)
                     // this change allows us to keep the files in the order they were selected
                     $('<div class="'+options.multifileName+'__list" id="' + options.multifileName + '__list-' + MultiFile.instanceKey + '"></div>').insertBefore(MultiFile.wrapper);
-                    MultiFile.list = $('#' + MultiFile.wrapID + '-list');
+                    MultiFile.list = $('#' + options.multifileName + '__list-' + MultiFile.instanceKey);
                 }
-                MultiFile.list = $(MultiFile.list);
+
+                MultiFile.block = MultiFile.wrapper.closest('.' + options.multifileName);
+
+                if ( !MultiFile.block.length ) {
+                    MultiFile.block = MultiFile.wrapper.prev('.' + options.multifileName + '__list').andSelf()
+                    .wrapAll('<div class="' + options.multifileName + '"></div>');
+                }
+
 
                 //===
 
@@ -396,12 +399,14 @@ if (window.jQuery)(function ($) {
                         //# Let's remember which input we've generated so
                         // we can disable the empty ones before submission
                         // See: http://plugins.jquery.com/node/1495
-                        newEle.addClass(options.multifileName);
+
+                        //newEle.addClass(options.multifileName + '_applied');
+
 
                         // Handle error
                         if (ERROR.length > 0) {
 
-
+                            MultiFile.errors = true;
                             // Handle error
                             if($.type(MultiFile.error)=='function')
                                 MultiFile.error(ERROR.join('\n\n'), MultiFile);
@@ -416,7 +421,7 @@ if (window.jQuery)(function ($) {
 
                         }
                         else { // if no errors have been found
-
+                            MultiFile.errors = false;
                             // remember total size
                             MultiFile.total_size = total_size;
 
@@ -457,7 +462,7 @@ if (window.jQuery)(function ($) {
                     }); // slave.change()
 
                     // point to wrapper
-                    $(slave).data('wrapper', MultiFile.wrapper);
+                    $(slave).data('MultiFile-wrapper', MultiFile.wrapper);
 
                     // store contorl's settings and file info in wrapper
                     $(MultiFile.wrapper).data('MultiFile',MultiFile);
@@ -590,11 +595,11 @@ if (window.jQuery)(function ($) {
                                     return false;
                                 });
 
+
                         // Insert label
                         MultiFile.list.append(
                             r.append(b, ' ', names)
                         );
-
                     //}); // each file?
 
                     //# Trigger Event! afterFileAppend
@@ -649,12 +654,14 @@ if (window.jQuery)(function ($) {
          * @example $('#selector').MultiFile('data');
          */
         data: function () {
+            // analyse this element
+
 
             // analyse this element
-            var e = $(this), b = e.is('#' + e.data('wrapper').attr('id'));
+            var e = $(this), b = e.data('MultiFile');
 
             // get control wrapper
-            var wp = b ? e : e.data('wrapper');
+            var wp = b ? e : e.data('MultiFile-wrapper');
             if(!wp || !wp.length)
                 return !console.error('Could not find MultiFile control wrapper');
 
@@ -735,7 +742,7 @@ if (window.jQuery)(function ($) {
          * @cat Plugins/MultiFile
          * @author Diego A. (http://www.fyneworks.com/)
          *
-         * @example $('#selector').MultiFile('size');
+         * @example $('#selector').MultiFile('count');
          */
         count: function () {
             var mf = this.MultiFile('data');
@@ -756,13 +763,19 @@ if (window.jQuery)(function ($) {
          * @author Diego A. (http://www.fyneworks.com/)
          *
          * @example $.fn.MultiFile.disableEmpty();
-         * @param String class (optional) A string specifying a class to be applied to all affected elements - Default: 'mfD'.
+         * @param String klass (optional) A string specifying a class to be applied to all affected elements - Default: 'mfD'.
          */
         disableEmpty: function (klass) {
             klass = (typeof (klass) == 'string' ? klass : '') || 'mfD';
             var o = [];
-            $('input:file.MultiFile').each(function () {
-                if ($(this).val() === '') o[o.length] = this;
+            $('input:file').each(function(){
+                if ( $(this).data('MultiFile-wrapper') && $(this).data('MultiFile-wrapper').data('MultiFile') ) {
+                    var multifile = $(this).data('MultiFile-wrapper').data('MultiFile');
+
+                    if ( this.value === '' ) {
+                        o[o.length] = this;
+                    }
+                }
             });
 
             // automatically re-enable for novice users
@@ -869,21 +882,37 @@ if (window.jQuery)(function ($) {
         preview: false,
         previewCss: 'max-height:100px; max-width:100px;',
         multifileName: 'MultiFile',     // make own name for all
-        wrapper: '', // .className point wrapper of the input
+        wrapper: '',                // .className point wrapper of the input
+        lang: 'en',                 // messages language
 
         // STRING: collection lets you show messages in different languages
         STRING: {
-            remove: 'x',
-            denied: 'You cannot select a $ext file.\nTry again...',
-            file: '$file',
-            selected: 'File selected: $file',
-            duplicate: 'This file has already been selected:\n$file',
-            toomuch: 'The files selected exceed the maximum size permited ($size)',
-            toolittle: 'The files do not reach the minimum size required ($size)',
-            toomany: 'Too many files selected (max: $max)',
-            toofew: 'Too few files selected (min: $max)',
-            toobig: '$file is too big (max $size)',
-            toosmall: '$file is too small (min $size)'
+            en: {
+                remove: 'x',
+                denied: 'You cannot select a $ext file.\nTry again...',
+                file: '$file',
+                selected: 'File selected: $file',
+                duplicate: 'This file has already been selected:\n$file',
+                toomuch: 'The files selected exceed the maximum size permited ($size)',
+                toolittle: 'The files do not reach the minimum size required ($size)',
+                toomany: 'Too many files selected (max: $max)',
+                toofew: 'Too few files selected (min: $max)',
+                toobig: '$file is too big (max $size)',
+                toosmall: '$file is too small (min $size)'
+            },
+            ru: {
+                remove: 'x',
+                denied: 'Нельзя выбрать $ext файл.',
+                file: '$file',
+                selected: 'Файл выбран: $file',
+                duplicate: 'Этот файл уже выбран:\n$file',
+                toomuch: 'Общий размер файлов выше допустимого ($size)',
+                toolittle: 'Слишком маленький размер файлов ($size)',
+                toomany: 'Максимальное кол-во файлов: $max',
+                toofew: 'Минимальное кол-во файлов: $max',
+                toobig: 'Превышен размер файла ($size)',
+                toosmall: 'Слишком маленький размер файла ($size)'
+            }
         },
 
         // name of methods that should be automcatically intercepted so the plugin can disable
@@ -933,4 +962,3 @@ if (window.jQuery)(function ($) {
     /*# AVOID COLLISIONS #*/
 })(jQuery);
 /*# AVOID COLLISIONS #*/
-

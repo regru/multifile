@@ -1,7 +1,7 @@
 {
   "name": "jquery-multifile",
   "title": "jQuery MultiFile",
-  "version": "2.2.2",
+  "version": "2.2.0",
   "description": "jQuery Multiple File Selection Plugin",
   "main": "index.html",
   "scripts": {
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/fyneworks/multifile/issues"
   },
-  "homepage": "https://github.com/regru/multifile.git",
+  "homepage": "https://github.com/fyneworks/multifile",
   "dependencies": {
     "jquery": "~1.7.3"
   },

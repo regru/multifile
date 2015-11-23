@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/fyneworks/multifile/issues"
   },
-  "homepage": "https://github.com/fyneworks/multifile",
+  "homepage": "https://github.com/regru/multifile.git",
   "dependencies": {
     "jquery": "~1.7.3"
   },

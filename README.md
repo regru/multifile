@@ -1,13 +1,15 @@
 #[jQuery Multiple File Upload](http://www.fyneworks.com/jquery/multifile/)
 
 ##Fixes
-- adds Multifile.block object for main block carry
-- adds Multifile.errors: true | false if multifile inner validation has errors
+- adds __Multifile.block__ object for main block carry
+- adds __Multifile.errors__ object for errors, contains DOM
 - __multiple="multiple"__ attribute fix (disappear on input original change)
 - BEM classes naming
-- restore default .submit() event handler for forms
-- disableEmpty strongly changed
-- add russian language for basic messages
+- restore default __.submit()__ event handler for forms
+- __.disableEmpty()__ strongly changed
+- adds __.reset()__ method to Multifile object
+- adds russian language for basic messages
+- adds showError/removeError methods
 
 
 ##Options
@@ -50,4 +52,7 @@ STRING: {
 }
 ```
 
+```js
+showErrors: true // append errors in html, false - calls 'error' function
+```
 

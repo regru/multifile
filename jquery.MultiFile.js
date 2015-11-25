@@ -402,14 +402,18 @@ if (window.jQuery)(function ($) {
 
                         //newEle.addClass(options.multifileName + '_applied');
 
+                        MultiFile.removeError();
 
                         // Handle error
                         if (ERROR.length > 0) {
 
-                            MultiFile.errors = true;
-                            // Handle error
-                            if($.type(MultiFile.error)=='function')
-                                MultiFile.error(ERROR.join('\n\n'), MultiFile);
+                            if ( options.showErrors ) {
+                                MultiFile.showError(ERROR.join("<br />"));
+                            } else {
+
+                                if ($.type(MultiFile.error)=='function')
+                                    MultiFile.error(ERROR.join("<br />"), MultiFile);
+                            }
 
                             // 2007-06-24: BUG FIX - Thanks to Adrian Wróbel <adrian [dot] wrobel [at] gmail.com>
                             // Ditch the trouble maker and add a fresh new element
@@ -421,7 +425,7 @@ if (window.jQuery)(function ($) {
 
                         }
                         else { // if no errors have been found
-                            MultiFile.errors = false;
+
                             // remember total size
                             MultiFile.total_size = total_size;
 
@@ -515,8 +519,6 @@ if (window.jQuery)(function ($) {
                             };
                         });
 
-                        // append file label to list
-                        if(i>1) names.append(', ');
                         names.append(label);
 
                     });
@@ -588,9 +590,13 @@ if (window.jQuery)(function ($) {
                                     MultiFile.trigger('afterFileRemove', slave, MultiFile, files_being_removed);
                                     //# End Event!
 
+                                    MultiFile.trigger('afterFileRemoveCallback', slave, MultiFile, files_being_removed);
+
                                     //# Trigger Event! onFileChange
                                     MultiFile.trigger('FileChange', MultiFile.current, MultiFile, files_remaining);
                                     //# End Event!
+
+                                    MultiFile.removeError();
 
                                     return false;
                                 });
@@ -605,7 +611,7 @@ if (window.jQuery)(function ($) {
                     //# Trigger Event! afterFileAppend
                     MultiFile.trigger('afterFileAppend', slave, MultiFile, files);
                     //# End Event!
-
+                    MultiFile.trigger('afterFileAppendCallback', slave, MultiFile, files);
                     //# Trigger Event! onFileChange
                     MultiFile.trigger('FileChange', slave, MultiFile, MultiFile.files);
                     //# End Event!
@@ -640,6 +646,7 @@ if (window.jQuery)(function ($) {
     ### Core functionality and API ###
     */
     $.extend($.fn.MultiFile, {
+
         /**
          * This method exposes the all the control's data
          *
@@ -689,7 +696,7 @@ if (window.jQuery)(function ($) {
          */
         reset: function () {
             var mf = this.MultiFile('data');
-            if (mf) $(mf.list).find('.' + mf.multifileName + '-remove').click();
+            if (mf) $(mf.list).find('.' + mf.multifileName + '__remove').click();
             return $(this);
         },
 
@@ -884,6 +891,7 @@ if (window.jQuery)(function ($) {
         multifileName: 'MultiFile',     // make own name for all
         wrapper: '',                // .className point wrapper of the input
         lang: 'en',                 // messages language
+        showErrors: true,           // Show error messages in html
 
         // STRING: collection lets you show messages in different languages
         STRING: {
@@ -920,13 +928,51 @@ if (window.jQuery)(function ($) {
         autoIntercept: ['submit', 'ajaxSubmit', 'ajaxForm', 'validate', 'valid' /* array of methods to intercept */ ],
 
         // error handling function
-        error: function (s, multifile) {
+        error: function (s) {
 
             if(typeof console != 'undefined') console.log(s);
 
             // TODO: add various dialog handlers here?
             alert(s);
-        }
+        },
+
+        showError: function (message) {
+
+            var multifile = this;
+
+            multifile.block.addClass(multifile.multifileName + '_status_error');
+
+            if ( !multifile.errors ) {
+                multifile.errors = $('<div class="' + multifile.multifileName + '__error" />').insertAfter(multifile.wrapper);
+                multifile.errors.html(message);
+            } else {
+                multifile.errors.append(message);
+            }
+        },
+
+        removeError: function () {
+            var multifile = this;
+
+            if ( multifile.errors ) {
+                multifile.errors.remove();
+                multifile.block.removeClass(multifile.multifileName + '_status_error');
+            }
+        },
+
+        /**
+         * This public method removes all selected files
+         *
+         * Returns a jQuery collection of all affected elements.
+         *
+         * @name reset
+         * @type jQuery
+         *
+         * @example multifile.reset();
+         */
+        reset: function () {
+            var multifile = this;
+            return multifile.E.MultiFile('reset');
+        },
     }; //} });
 
     /*--------------------------------------------------------*/

@@ -1,9 +1,11 @@
 /*
- ### jQuery Multiple File Selection Plugin v2.2.0 - 2015-03-23 ###
+ ### jQuery Multiple File Selection Plugin v2.2.6 - 2015-12-01 ###
+ * Fork home: https://github.com/regru/multifile
+ *
  * Home: http://www.fyneworks.com/jquery/multifile/
  * Code: http://code.google.com/p/jquery-multifile-plugin/
  *
-    * Licensed under http://en.wikipedia.org/wiki/MIT_License
+ * Licensed under http://en.wikipedia.org/wiki/MIT_License
  ###
 */
 /*# AVOID COLLISIONS #*/
@@ -415,7 +417,7 @@ if (window.jQuery)(function ($) {
                                     MultiFile.error(ERROR.join("<br />"), MultiFile);
                             }
 
-                            // 2007-06-24: BUG FIX - Thanks to Adrian Wrуbel <adrian [dot] wrobel [at] gmail.com>
+                            // 2007-06-24: BUG FIX - Thanks to Adrian WrСѓbel <adrian [dot] wrobel [at] gmail.com>
                             // Ditch the trouble maker and add a fresh new element
                             MultiFile.n--;
                             MultiFile.addSlave(newEle[0], slave_count);
@@ -910,16 +912,16 @@ if (window.jQuery)(function ($) {
             },
             ru: {
                 remove: 'x',
-                denied: 'Нельзя выбрать $ext файл.',
+                denied: 'РќРµР»СЊР·СЏ РІС‹Р±СЂР°С‚СЊ $ext С„Р°Р№Р».',
                 file: '$file',
-                selected: 'Файл выбран: $file',
-                duplicate: 'Этот файл уже выбран:\n$file',
-                toomuch: 'Общий размер файлов выше допустимого ($size)',
-                toolittle: 'Слишком маленький размер файлов ($size)',
-                toomany: 'Максимальное кол-во файлов: $max',
-                toofew: 'Минимальное кол-во файлов: $max',
-                toobig: 'Превышен размер файла ($size)',
-                toosmall: 'Слишком маленький размер файла ($size)'
+                selected: 'Р¤Р°Р№Р» РІС‹Р±СЂР°РЅ: $file',
+                duplicate: 'Р­С‚РѕС‚ С„Р°Р№Р» СѓР¶Рµ РІС‹Р±СЂР°РЅ:\n$file',
+                toomuch: 'РћР±С‰РёР№ СЂР°Р·РјРµСЂ С„Р°Р№Р»РѕРІ РІС‹С€Рµ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ ($size)',
+                toolittle: 'РЎР»РёС€РєРѕРј РјР°Р»РµРЅСЊРєРёР№ СЂР°Р·РјРµСЂ С„Р°Р№Р»РѕРІ ($size)',
+                toomany: 'РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»-РІРѕ С„Р°Р№Р»РѕРІ: $max',
+                toofew: 'РњРёРЅРёРјР°Р»СЊРЅРѕРµ РєРѕР»-РІРѕ С„Р°Р№Р»РѕРІ: $max',
+                toobig: 'РџСЂРµРІС‹С€РµРЅ СЂР°Р·РјРµСЂ С„Р°Р№Р»Р° ($size)',
+                toosmall: 'РЎР»РёС€РєРѕРј РјР°Р»РµРЅСЊРєРёР№ СЂР°Р·РјРµСЂ С„Р°Р№Р»Р° ($size)'
             }
         },
 

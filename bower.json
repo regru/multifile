@@ -1,6 +1,6 @@
 {
   "name": "jquery.multifile",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "homepage": "https://github.com/regru/multifile",
   "authors": [
     "REG.RU"
@@ -23,13 +23,4 @@
     "test",
     "tests"
   ],
-  "_release": "2.2.5",
-  "_resolution": {
-    "type": "version",
-    "tag": "2.2.5",
-    "commit": "6be3ffa08649c98bd7145290cf1248fd3e65cd81"
-  },
-  "_source": "https://github.com/regru/multifile.git",
-  "_target": "2.2.5",
-  "_originalSource": "https://github.com/regru/multifile.git"
 }

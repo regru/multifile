@@ -1,8 +1,9 @@
 {
   "name": "jquery.multifile",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "homepage": "https://github.com/regru/multifile",
   "authors": [
+    "Fyneworks",
     "REG.RU"
   ],
   "description": "jQuery multiple file upload plugin",
@@ -23,4 +24,13 @@
     "test",
     "tests"
   ],
+  "_release": "2.2.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.2.7",
+    "commit": "b1a52e4641c44412c3b28e5f5875af1e03f5a2db"
+  },
+  "_source": "https://github.com/regru/multifile.git",
+  "_target": "2.2.7",
+  "_originalSource": "https://github.com/regru/multifile.git"
 }

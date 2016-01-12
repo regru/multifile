@@ -955,6 +955,7 @@ if (window.jQuery)(function ($) {
 
             if ( multifile.errors ) {
                 multifile.errors.remove();
+                delete multifile.errors;
                 multifile.block.removeClass(multifile.multifileName + '_status_error');
             }
         },

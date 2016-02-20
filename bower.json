@@ -1,6 +1,6 @@
 {
   "name": "jquery.multifile",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "homepage": "https://github.com/regru/multifile",
   "authors": [
     "Fyneworks",
@@ -23,14 +23,5 @@
     "docs",
     "test",
     "tests"
-  ],
-  "_release": "2.2.9",
-  "_resolution": {
-    "type": "version",
-    "tag": "2.2.9",
-    "commit": "773fb5b001cf770ca3bbce969747ff45e4f4c435"
-  },
-  "_source": "https://github.com/regru/multifile.git",
-  "_target": "2.2.9",
-  "_originalSource": "https://github.com/regru/multifile.git"
+  ]
 }

@@ -460,7 +460,9 @@ if (window.jQuery)(function ($) {
                             MultiFile.addToList(this, slave_count, newfs);
 
                             //# Trigger Event! afterFileSelect
-                            MultiFile.trigger('afterFileSelect', this, MultiFile, newfs);
+
+                            MultiFile.afterFileSelect.apply(this, [this, newfs, MultiFile])
+
                             //# End Event!
 
                         } // no errors detected
@@ -592,7 +594,7 @@ if (window.jQuery)(function ($) {
                                     MultiFile.trigger('afterFileRemove', slave, MultiFile, files_being_removed);
                                     //# End Event!
 
-                                    MultiFile.trigger('afterFileRemoveCallback', slave, MultiFile, files_being_removed);
+                                    MultiFile.afterFileRemoveCallback.apply(this,[slave, files_being_removed, MultiFile]);
 
                                     //# Trigger Event! onFileChange
                                     MultiFile.trigger('FileChange', MultiFile.current, MultiFile, files_remaining);
@@ -608,7 +610,7 @@ if (window.jQuery)(function ($) {
                         MultiFile.list.append(
                             r.append(b, ' ', names)
                         );
-                    //}); // each file?
+                   // }); // each file?
 
                     //# Trigger Event! afterFileAppend
                     MultiFile.trigger('afterFileAppend', slave, MultiFile, files);

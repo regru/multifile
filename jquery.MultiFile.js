@@ -461,7 +461,9 @@ if (window.jQuery)(function ($) {
 
                             //# Trigger Event! afterFileSelect
 
-                            MultiFile.afterFileSelect.apply(this, [this, newfs, MultiFile])
+                            if ( typeof MultiFile.afterFileSelect == 'function' ) {
+                                MultiFile.afterFileSelect.apply(this, [this, newfs, MultiFile]);
+                            }
 
                             //# End Event!
 
@@ -594,7 +596,9 @@ if (window.jQuery)(function ($) {
                                     MultiFile.trigger('afterFileRemove', slave, MultiFile, files_being_removed);
                                     //# End Event!
 
-                                    MultiFile.afterFileRemoveCallback.apply(this,[slave, files_being_removed, MultiFile]);
+                                    if ( typeof MultiFile.afterFileRemoveCallback == 'function' ) {
+                                        MultiFile.afterFileRemoveCallback.apply(this,[slave, files_being_removed, MultiFile]);
+                                    }
 
                                     //# Trigger Event! onFileChange
                                     MultiFile.trigger('FileChange', MultiFile.current, MultiFile, files_remaining);

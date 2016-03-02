@@ -18,8 +18,6 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "bower.json",
-    "package.json",
     "docs",
     "test",
     "tests"

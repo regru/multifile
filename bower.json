@@ -23,5 +23,14 @@
     "docs",
     "test",
     "tests"
-  ]
+  ],
+  "_release": "2.2.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.2.11",
+    "commit": "1526924af421fb29303c37dd222d58d863b545e8"
+  },
+  "_source": "https://github.com/regru/multifile.git",
+  "_target": "2.2.11",
+  "_originalSource": "https://github.com/regru/multifile.git"
 }

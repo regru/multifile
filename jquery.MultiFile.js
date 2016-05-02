@@ -951,7 +951,7 @@ if (window.jQuery)(function ($) {
             multifile.block.addClass(multifile.multifileName + '_status_error');
 
             if ( !multifile.errors ) {
-                multifile.errors = $('<div class="' + multifile.multifileName + '__error" />').insertAfter(multifile.wrapper);
+                multifile.errors = $('<div class="' + multifile.multifileName + '__error" />').appendTo(multifile.wrapper.parent());
                 multifile.errors.html(message);
             } else {
                 multifile.errors.append(message);

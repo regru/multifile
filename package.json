@@ -1,7 +1,7 @@
 {
   "name": "jquery-multifile",
   "title": "jQuery MultiFile",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "jQuery Multiple File Selection Plugin",
   "main": "index.html",
   "scripts": {

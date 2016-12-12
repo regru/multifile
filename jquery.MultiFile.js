@@ -1,3 +1,4 @@
+
 /*
  ### jQuery Multiple File Selection Plugin v2.2.6 - 2015-12-01 ###
  * Fork home: https://github.com/regru/multifile
@@ -16,7 +17,7 @@ if (window.jQuery)(function ($) {
 
     // size label function (shows kb and mb where accordingly)
     function sl(x) {
-        return x > 1048576 ? (x / 1048576).toFixed(1) + 'Mb' : (x==1024?'1Mb': (x / 1024).toFixed(1) + 'Kb' );
+        return x > 1048576 ? (x / 1048576).toFixed(1) + 'Mb' : (x==1024?'1Mb': x < 512 ? x + ' bytes' : (x / 1024).toFixed(1) + 'Kb' );
     }
     // utility function to return an array of
     function FILE_LIST(x){
@@ -352,8 +353,8 @@ if (window.jQuery)(function ($) {
                             }
 
                             // limit the min size of individual files selected
-                            if (MultiFile.minfile>0 && s>0 && s<MultiFile.minfile) {
-                                ERROR[ERROR.length] = p(MultiFile.STRING.toosmall);
+                            if (MultiFile.minfile>0 && s<MultiFile.minfile) {
+                                ERROR[ERROR.length] = MultiFile.STRING.toolittle.replace('$size', sl(s) + ' < ' + sl(MultiFile.minfile));
                                 MultiFile.trigger('FileTooSmall', this, MultiFile, [file]);
                             }
 
@@ -391,6 +392,9 @@ if (window.jQuery)(function ($) {
                             ERROR[ERROR.length] = MultiFile.STRING.toomuch.replace('$size', sl(total_size) + ' > ' + sl(MultiFile.maxsize));
                             MultiFile.trigger('FileTooMuch', this, MultiFile, newfs);
                         }
+
+
+
                         if (MultiFile.minsize > 0 && total_size < MultiFile.minsize) {
                             ERROR[ERROR.length] = MultiFile.STRING.toolittle.replace('$size', sl(total_size) + ' < ' + sl(MultiFile.minsize));
                             MultiFile.trigger('FileTooLittle', this, MultiFile, newfs);
@@ -410,11 +414,11 @@ if (window.jQuery)(function ($) {
                         if (ERROR.length > 0) {
 
                             if ( options.showErrors ) {
-                                MultiFile.showError(ERROR.join("<br />"));
+                                MultiFile.showError(ERROR[0]);
                             } else {
 
                                 if ($.type(MultiFile.error)=='function')
-                                    MultiFile.error(ERROR.join("<br />"), MultiFile);
+                                    MultiFile.error(ERROR[0], MultiFile);
                             }
 
                             // 2007-06-24: BUG FIX - Thanks to Adrian Wrуbel <adrian [dot] wrobel [at] gmail.com>
@@ -1017,3 +1021,4 @@ if (window.jQuery)(function ($) {
     /*# AVOID COLLISIONS #*/
 })(jQuery);
 /*# AVOID COLLISIONS #*/
+

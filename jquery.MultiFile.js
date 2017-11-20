@@ -28,6 +28,10 @@ if (window.jQuery)(function ($) {
         }];
     }
 
+    function escape(str){
+        return String(str || '').replace(/[&<>'"]/g, function(c) { return '&#'+c.charCodeAt()+';'; });
+    }
+
     // plugin initialization
     $.fn.MultiFile = function (options) {
         if (!this.length) return this; // quick fail
@@ -500,7 +504,7 @@ if (window.jQuery)(function ($) {
 
                     var names = $('<span/>');
                     $.each(files, function (i, file) {
-                        var v = String(file.name || '' ),
+                        var v = escape(file.name),
                                 S = MultiFile.STRING,
                                 n = S.label || S.file || S.name,
                                 t = S.title || S.tooltip || S.selected,
